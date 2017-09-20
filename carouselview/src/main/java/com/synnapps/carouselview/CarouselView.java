@@ -359,13 +359,15 @@ public class CarouselView extends FrameLayout {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             /** CUSTOM LOGIC.
-             *  Added auto scroll to next/previous item when dragging .
+             *  Added auto scroll to next/previous item when dragging.
+             *  Threshold is 20% of the item view.
              */
             if(previousState == ViewPager.SCROLL_STATE_DRAGGING){
                 //make sure that carousel is on pause.
                 pauseCarousel();
                 //Dragging to the left -
                 if(previousOffsetPX > positionOffsetPixels){
+
                     if(positionOffset < 0.8){
                         //Dragging to the left automatically sets the page position value to that item.
                         containerViewPager.setCurrentItem(position, true);

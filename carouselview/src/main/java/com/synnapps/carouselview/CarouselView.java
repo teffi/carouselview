@@ -55,6 +55,8 @@ public class CarouselView extends FrameLayout {
     private boolean animateOnBoundary = true;
 
     private int previousState;
+    //CUSTOM
+    private int previousOffsetPX;
 
     private ViewPager.PageTransformer pageTransformer;
 
@@ -356,9 +358,29 @@ public class CarouselView extends FrameLayout {
     ViewPager.OnPageChangeListener carouselOnPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            //Programmatic scroll
-
+            /** CUSTOM LOGIC.
+             *  Added auto scroll to next/previous item when dragging .
+             */
+            if(previousState == ViewPager.SCROLL_STATE_DRAGGING){
+                //make sure that carousel is on pause.
+                pauseCarousel();
+                //Dragging to the left -
+                if(previousOffsetPX > positionOffsetPixels){
+                    if(positionOffset < 0.8){
+                        //Dragging to the left automatically sets the page position value to that item.
+                        containerViewPager.setCurrentItem(position, true);
+                        //Log.d(this.toString(),"POSITION SCROLLED OFFSET back auto snap");
+                    }
+                }else{
+                    //Dragging to the right
+                    if(positionOffset > 0.2){
+                        containerViewPager.setCurrentItem(position + 1, true);
+                       //Log.d(this.toString(),"POSITION SCROLLED OFFSET next auto snap");
+                    }
+                }
+            }
+            //Store offset to check the drag direction
+            previousOffsetPX = positionOffsetPixels;
         }
 
         @Override
